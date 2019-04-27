@@ -1,0 +1,41 @@
+services:
+    app.thirdparty_call_service:
+      class: AppBundle\Service\ThirdPartyCallService
+      arguments: ["@service_container"]
+      public: true
+
+    app.movie_ticket_avail_check_command:
+      class: AppBundle\Command\MovieTicketAvailCheck
+      tags:
+        - { name: "console.command" }
+        - { name: monolog.logger, channel: "cron" }
+      calls:
+        - [setServiceContainer, ["@service_container"]]
+        - [setCronLogger, ["@monolog.logger.cron"]]
+        - [setMaxValue, ["%max_alert_value%"]]
+      public: true
+
+    app.email_notifier_service:
+      class: AppBundle\Service\EmailNotifierService
+      arguments:
+        - "@mailer"
+        - "@templating"
+        - "%mailer_user%"
+        - "@monolog.logger.exception"
+      public: true
+
+    app.counter_service:
+      class: AppBundle\Service\CounterService
+      arguments:
+        - "@service_container"
+        - "%max_alert_value%"
+        - "%alert_counter_file_dir%"
+        - "@monolog.logger.exception"
+        - "%counter_file_name%"
+      public: true
+
+    app.search_ticket_avail_service:
+      class: AppBundle\Service\SearchTicketsAvailService
+      arguments:
+        - "@service_container"
+      public: true
