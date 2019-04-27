@@ -38,7 +38,7 @@ class SearchTicketsAvailService
 
         $nodes = $crawler->filterXPath('//div[text()="'.$searchString.'"]');
 
-        if (!empty($nodes) && !empty($nodes->first())) {
+        if (!empty($nodes) && 0 !== $nodes->count()) {
             return true;
         }
 
